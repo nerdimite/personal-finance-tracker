@@ -1,0 +1,25 @@
+{
+  "name": "finance-dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NEXT_TELEMETRY_DISABLED=1 next dev --hostname 127.0.0.1 --port ${DASHBOARD_PORT:-4100}",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "NEXT_TELEMETRY_DISABLED=1 next start --hostname 127.0.0.1 --port ${DASHBOARD_PORT:-4100}",
+    "test": "node --experimental-strip-types --test lib/*.test.ts"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "pg": "8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}

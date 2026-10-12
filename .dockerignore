@@ -1,0 +1,15 @@
+.git
+.venv
+.env
+**/.DS_Store
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+logs
+backups
+workspace/messages
+dashboard
+# Real bank statements. Gitignored. Never send them as build context.
+zzz
+zzz/

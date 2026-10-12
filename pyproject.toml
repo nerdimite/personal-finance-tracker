@@ -1,0 +1,38 @@
+[project]
+name = "finance-tracker"
+version = "0.1.0"
+description = "Personal finance tracker: double-entry Postgres ledger, Telegram capture, local dashboard."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp>=2.3.0",
+    "numbers-parser>=4.20.0",
+    "openpyxl>=3.1.5",
+    "pandas>=3.0.6",
+    "psycopg[binary]>=3.2",
+    "python-telegram-bot>=21.10",
+    "xlrd>=2.0.2",
+]
+
+[project.scripts]
+ft-migrate = "ft_db.cli:migrate_main"
+ft-seed = "ft_db.cli:seed_main"
+ft-sync-categories = "ft_db.cli:sync_categories_main"
+ft-schema-doc = "ft_db.cli:schema_doc_main"
+ft-test-db = "ft_db.cli:test_db_main"
+ft-reset-ledger = "ft_db.cli:reset_ledger_main"
+ft-bot = "ft_bot.__main__:main"
+ft-mcp = "ft_mcp.server:main"
+ft-migration = "ft_mcp.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ft_db", "ft_bot", "ft_mcp"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

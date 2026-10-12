@@ -1,0 +1,10 @@
+{"type":"system","subtype":"init","session_id":"fixture-session","model":"claude-sonnet","cwd":"/app/workspace","tools":["mcp__finance__sql"]}
+{"type":"user","message":{"role":"user","content":[{"type":"text","text":"Paid Rapido 120 for the ride home"}]}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"thinking","thinking":"Look up the bike taxi category."},{"type":"text","text":"I'll record the Rapido ride."},{"type":"tool_use","id":"toolu_fixture_1","name":"mcp__finance__sql","input":{"query":"SELECT path FROM accounts WHERE path = 'expense:transport:local:bike_taxi'"}}]}}
+{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_fixture_1","content":[{"type":"text","text":"fixture-sql-result-ok"}],"is_error":false}]}}
+{"type":"rate_limit_event","status":"ok"}
+not-json
+{"hello":1}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"The category lookup failed, but the ride is recorded."},{"type":"tool_use","id":"toolu_fixture_2","name":"mcp__finance__sql","input":{"query":"SELECT * FROM missing_fixture_table"}}]}}
+{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_fixture_2","content":"fixture-sql-result-error: relation \"missing_fixture_table\" does not exist","is_error":true}]}}
+{"type":"result","subtype":"success","is_error":false,"duration_ms":4200,"num_turns":2,"result":"Recorded ₹120 for Rapido.","total_cost_usd":0.0123,"session_id":"fixture-session"}

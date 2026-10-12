@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "finance": {
+      "command": "python",
+      "args": ["-m", "ft_mcp"],
+      "env": {
+        "APP_RUN_ID": "${APP_RUN_ID:-}",
+        "AGENT_DATABASE_URL": "${AGENT_DATABASE_URL:-}",
+        "MIGRATOR_DATABASE_URL": "${MIGRATOR_DATABASE_URL:-}"
+      }
+    }
+  }
+}

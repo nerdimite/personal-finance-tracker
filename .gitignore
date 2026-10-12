@@ -1,0 +1,20 @@
+.env
+__pycache__/
+*.py[oc]
+.venv
+.DS_Store
+
+# Runtime data. Keep the directories via .gitkeep.
+workspace/messages/**
+!workspace/messages/.gitkeep
+logs/**
+!logs/.gitkeep
+backups/**
+!backups/.gitkeep
+db/migrations/*.sql.tmp
+
+# personal statements / test data
+zzz/
+
+# The agent's live memory holds personal details. MEMORY.example.md is the template.
+workspace/MEMORY.md

@@ -1,0 +1,79 @@
+# One stack: postgres, bot (ticket 03), dashboard (ticket 06).
+# `docker compose up -d postgres` starts only the database.
+# The bot and dashboard services start with `docker compose up -d`.
+
+name: finance-tracker
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-owner}
+      POSTGRES_DB: ${POSTGRES_DB:-finance}
+    ports:
+      # Non-default host port, localhost only. Containers reach this service as host `postgres`.
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  bot:
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+    image: finance-tracker-bot
+    init: true
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Host .env URLs use 127.0.0.1. The entrypoint rewrites these onto the compose network.
+      FT_DB_HOST: postgres
+      FT_DB_PORT: "5432"
+      FT_REPO_ROOT: /app
+      CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1"
+      TZ: Asia/Kolkata
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./workspace:/app/workspace
+      - ./logs:/app/logs
+      - ./db/migrations:/app/db/migrations
+      - ./backups:/app/backups
+      - claude_home:/root/.claude
+
+  dashboard:
+    build:
+      context: ./dashboard
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${DASHBOARD_PORT:-4100}:3000"
+    environment:
+      DASHBOARD_DATABASE_URL: ${DASHBOARD_DATABASE_URL}
+      # Host URL uses 127.0.0.1. The app rewrites these to the compose network.
+      DASHBOARD_DB_HOST: postgres
+      DASHBOARD_DB_PORT: "5432"
+      WORKSPACE_DIR: /app/workspace
+      LOGS_DIR: /app/logs
+      PORT: "3000"
+      # Browser-facing port, checked against the Host header.
+      DASHBOARD_PORT: ${DASHBOARD_PORT:-4100}
+      HOSTNAME: 0.0.0.0
+    volumes:
+      - ./workspace:/app/workspace:ro
+      - ./logs:/app/logs:ro
+
+volumes:
+  pgdata:
+  # Named volume for the bot container's /root/.claude (session transcripts).
+  claude_home:
